@@ -9,7 +9,7 @@ public class VertexNormalState : VertexBaseState
     public override void EnterState(VertexStateManager vertex)
     {
         vertex.GetLineRenderer().SetPosition(1, vertex.transform.position);
-        vertex.GetComponent<Image>().color = Color.white;
+        vertex.GetComponent<Image>().color = vertex.CurrentColor;
     }
 
     public override void UpdateState(VertexStateManager vertex)
@@ -17,6 +17,9 @@ public class VertexNormalState : VertexBaseState
         if (Input.GetKey(KeyCode.LeftShift))
         {
             vertex.SwitchState(vertex.EdgeDrawState);
+        } else if(Input.GetKey(KeyCode.LeftControl))
+        {
+            vertex.SwitchState(vertex.SelectableState); 
         }
     }
 
@@ -27,5 +30,10 @@ public class VertexNormalState : VertexBaseState
         vertex.EmptyEdge.transform.position = pos;
         lr.SetPosition(0, pos);
         lr.SetPosition(1, pos);
+    }
+
+    public override void ClickEvent(VertexStateManager vertex)
+    {
+        //throw new NotImplementedException();
     }
 }

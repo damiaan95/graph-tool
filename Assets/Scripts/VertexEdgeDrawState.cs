@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class VertexEdgeDrawState : VertexBaseState
 {
+    public override void ClickEvent(VertexStateManager vertex)
+    {
+        throw new NotImplementedException();
+    }
+
     public override void DragEvent(VertexStateManager vertex, Vector3 pos)
     {
         vertex.GetLineRenderer().SetPosition(1, pos);
@@ -12,7 +17,7 @@ public class VertexEdgeDrawState : VertexBaseState
 
     public override void EnterState(VertexStateManager vertex)
     {
-        //Debug.Log("this vertex now entered its EdgeDrawState");
+        Debug.Log("this vertex now entered its EdgeDrawState");
     }
 
     public override void UpdateState(VertexStateManager vertex)

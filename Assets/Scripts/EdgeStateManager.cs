@@ -47,8 +47,8 @@ public class EdgeStateManager : MonoBehaviour
     {
         List<Vector2> points = new List<Vector2>
         {
-            (Vector2)transform.InverseTransformPoint(new Vector3(lr.GetPosition(0).x, lr.GetPosition(0).y)),
-            (Vector2)transform.InverseTransformPoint(new Vector3(lr.GetPosition(1).x, lr.GetPosition(1).y))
+            transform.InverseTransformPoint(new Vector3(lr.GetPosition(0).x, lr.GetPosition(0).y)),
+            transform.InverseTransformPoint(new Vector3(lr.GetPosition(1).x, lr.GetPosition(1).y))
         };
         edgeCollider.SetPoints(points);
     }

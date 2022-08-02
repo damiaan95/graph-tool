@@ -36,6 +36,7 @@ public class DrawTool : MonoBehaviour
         
         vertex.OnDragEvent += Drag;
         vertex.OnRightClickEvent += RemoveVertex;
+        vertex.OnLeftClickEvent += Select;
         //Vertex<VertexStateManager> v = new Vertex<VertexStateManager>(vertex, new LinkedList<Vertex<VertexStateManager>>()); 
         //G.AddVertex(v);
     }
@@ -55,6 +56,11 @@ public class DrawTool : MonoBehaviour
     private void Drag(VertexStateManager vertex)
     {
         vertex.UpdatePosition(GetMousePosition());
+    }
+
+    private void Select(VertexStateManager vertex)
+    {
+        vertex.SelectVertex();
     }
 
     private Vector3 GetMousePosition()

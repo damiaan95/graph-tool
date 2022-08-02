@@ -10,26 +10,35 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
     public VertexNormalState NormalState = new VertexNormalState();
     public VertexEdgeDrawState EdgeDrawState = new VertexEdgeDrawState();
     public VertexConnectingState ConnectingState = new VertexConnectingState();
+    public VertexSelectableState SelectableState = new VertexSelectableState();
 
     [SerializeField] GameObject edgePrefab;
+    public Color CurrentColor;
     public EdgeStateManager EmptyEdge;
     private LineRenderer lr;
 
     // Start is called before the first frame update
     void Start()
     {
-        if(Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             currentState = EdgeDrawState;
-        } else
+        }
+        else if (Input.GetKey(KeyCode.LeftControl))
+        {
+            currentState = SelectableState;
+        }
+        else
         {
             currentState = NormalState;
         }
+
         EmptyEdge = Instantiate(edgePrefab,
                                 transform.position,
                                 Quaternion.identity, transform)
             .GetComponent<EdgeStateManager>();
 
+        CurrentColor = Color.white;
         lr = EmptyEdge.GetComponent<LineRenderer>();
         lr.positionCount = 2;
         lr.SetPosition(0, this.transform.position);
@@ -38,7 +47,6 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
         currentState.EnterState(this);
 
         Debug.Log(currentState.GetType());
-
     }
 
     private void RemoveEdge(EdgeStateManager edge)
@@ -61,6 +69,12 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
         currentState = state;
         currentState.EnterState(this);
     }
+
+    internal void SelectVertex()
+    {
+        currentState.ClickEvent(this);
+    }
+
     public VertexBaseState GetState()
     {
         return currentState;
@@ -95,7 +109,7 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
             OnRightClickEvent?.Invoke(this);
         }
         else if (eventData.pointerId == -1) //Left Click
-        {
+        { 
             OnLeftClickEvent?.Invoke(this);
         }
 

@@ -2,46 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Vertex<T>
+public class Vertex<V,E>
 {
-    private LinkedList<Vertex<T>> neighbors;
+    private Dictionary<Vertex<V,E>, Edge<V,E>> neighbors;
 
-    public LinkedList<Vertex<T>> Neighbors
+    public Dictionary<Vertex<V,E>, Edge<V,E>> Neighbors
     {
         get { return neighbors; }
     }
-    private T data;
+    private V data;
 
-    public T Data
+    public V Data
     {
         get { return data; }
         set { data = value; }
     }
 
-    public Vertex(T data, LinkedList<Vertex<T>> neighbors)
+    public Vertex(V data)
     {
         this.data = data;
-        this.neighbors = neighbors;
+        this.neighbors = new Dictionary<Vertex<V,E>, Edge<V, E>>();
     }
 
-    public bool AddNeighbor(Vertex<T> v)
+    public bool AddNeighbor(Vertex<V, E> v, Edge<V, E> edge)
     {
-        if(!neighbors.Contains(v))
+        if(!neighbors.ContainsKey(v))
         {
-            neighbors.AddLast(v);
+            neighbors.Add(v, edge);
             return true;
         }
         return false;
     }
 
-    public bool RemoveNeighbor(Vertex<T> v)
+    public bool RemoveNeighbor(Vertex<V, E> v)
     {
         return neighbors.Remove(v);
         
     }
-    public bool HasNeighbor(Vertex<T> v)
+    public bool HasNeighbor(Vertex<V, E> v)
     {
-        return neighbors.Contains(v);
+        return neighbors.ContainsKey(v);
     } 
 
 

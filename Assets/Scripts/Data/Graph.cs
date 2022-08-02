@@ -2,63 +2,66 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Graph<T>
+public class Graph<V, E>
 {
-    private List<Vertex<T>> V;
+    private List<Vertex<V, E>> Vertices;
 
     public Graph()
     {
-        this.V = new List<Vertex<T>>();
+        this.Vertices = new List<Vertex<V, E>>();
     }
 
-    public void AddVertex(Vertex<T> vertex)
+    public void AddVertex(Vertex<V, E> vertex)
     {
-        V.Add(vertex);
+        Vertices.Add(vertex);
     }
 
-    public void AddVertex(T data, LinkedList<Vertex<T>> neighbors)
+    public void AddVertex(V data)
     {
-        V.Add(new Vertex<T>(data, neighbors));
+        Vertices.Add(new Vertex<V, E>(data));
     }
 
-    public void RemoveVertex(Vertex<T> v)
+    public void RemoveVertex(Vertex<V, E> v)
     {
-        foreach (Vertex<T> u in v.Neighbors)
+        foreach (KeyValuePair<Vertex<V, E>, Edge<V, E>> u in v.Neighbors)
         {
-            DeleteEdge(v, u);
+            DeleteEdge(v, u.Key);
         }
-        V.Remove(v);
+        Vertices.Remove(v);
     }
 
-    public bool AddEdge(Vertex<T> v1, Vertex<T> v2)
+    public bool AddEdge(Vertex<V, E> v1, Vertex<V, E> v2, Edge<V, E> e)
     {
-        bool canAddAsNeighbors = v1.AddNeighbor(v2);
-        canAddAsNeighbors = v2.AddNeighbor(v1);
+        bool canAddAsNeighbors1 = v1.AddNeighbor(v2, e);
+        bool canAddAsNeighbors2 = v2.AddNeighbor(v1, e);
+        if(canAddAsNeighbors1 != canAddAsNeighbors2)
+        {
+            throw new BrokenGraphException("edge already exists for one vertex but not the other");
+        }
 
-        return canAddAsNeighbors;
+        return canAddAsNeighbors1;
     }
 
-    public bool DeleteEdge(Vertex<T> v1, Vertex<T> v2)
+    public bool DeleteEdge(Vertex<V, E> v1, Vertex<V, E> v2)
     {
         if(ContainsEdge(v1, v2))
         {
-            if(v1.RemoveNeighbor(v2))
-            {
-                return v2.RemoveNeighbor(v1); // somehow need to add exception here if it turns out to be false.
-            } else
-            {
-                return false;// Can add exceptions here
-            }
+            return v1.RemoveNeighbor(v2) && v2.RemoveNeighbor(v1); //exceptions can be added here.
         }
-        return false; // if this point is reached, removing was nog succesfull.
+        return false; // if this point is reached, edge did not exist succesfull.
     }
 
-    public bool ContainsEdge(Vertex<T> v1, Vertex<T> v2)
+    public bool ContainsEdge(Vertex<V, E> v1, Vertex<V, E> v2)
     {
-        return v1.HasNeighbor(v2) && v2.HasNeighbor(v1);
+        if(v1.HasNeighbor(v2) != v2.HasNeighbor(v1))
+        {
+            throw new BrokenGraphException("one vertex has other as neighbor but not the reverse");
+        }
+        return v1.HasNeighbor(v2);
     }
-    public bool ContainsVertex(Vertex<T> vertex)
+
+    public bool ContainsVertex(Vertex<V, E> vertex)
     {
-        return V.Contains(vertex);
+        return Vertices.Contains(vertex);
     }
 }

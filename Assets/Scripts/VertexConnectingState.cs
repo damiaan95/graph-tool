@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class VertexConnectingState : VertexBaseState
 {
+    public override void ClickEvent(VertexStateManager vertex)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void DragEvent(VertexStateManager vertex, Vector3 pos)
     {
         //throw new System.NotImplementedException();
