@@ -16,7 +16,7 @@ public class EdgeColliderScript : MonoBehaviour
         if(edge.GetState() == edge.InitializationState) {
             if (collision.gameObject.transform != transform.parent)
             {
-                edge.Vertices[1] = collision.gameObject;
+                edge.Vertices[1] = collision.gameObject.GetComponent<VertexStateManager>();
                 //Debug.Log("hit something");
             }
         }

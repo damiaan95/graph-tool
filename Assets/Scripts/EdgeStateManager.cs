@@ -9,16 +9,15 @@ public class EdgeStateManager : MonoBehaviour
     public EdgeNormalState NormalState = new EdgeNormalState();
     public EdgeTrueState TrueState = new EdgeTrueState();
 
-    GameObject[] vertices = new GameObject[2];
+    VertexStateManager[] vertices = new VertexStateManager[2];
 
     LineRenderer lr;
     EdgeCollider2D edgeCollider;
 
-    public GameObject[] Vertices { get => vertices; set => vertices = value; }
+    public VertexStateManager[] Vertices { get => vertices; set => vertices = value; }
 
     void Start()
     {
-       // Debug.Log("a new edge was spawned");
         currentState = InitializationState;
         currentState.EnterState(this);
         lr = GetComponent<LineRenderer>();

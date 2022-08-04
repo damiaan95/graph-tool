@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DrawTool : MonoBehaviour
 {
@@ -17,11 +18,13 @@ public class DrawTool : MonoBehaviour
     [Header("Edges")]
     [SerializeField] private GameObject edgePrefab;
 
-    //Graph<VertexStateManager> G;
+    [SerializeField] private GameObject[] selectedVertices = new GameObject[2];
+
+    internal static Graph<VertexStateManager> G;
 
     private void Awake()
     {
-        //G = new Graph<VertexStateManager>();
+        G = new Graph<VertexStateManager>();
         drawCanvas.OnDrawCanvasLeftClickEvent += AddVertex;
     }
 
@@ -37,20 +40,14 @@ public class DrawTool : MonoBehaviour
         vertex.OnDragEvent += Drag;
         vertex.OnRightClickEvent += RemoveVertex;
         vertex.OnLeftClickEvent += Select;
-        //Vertex<VertexStateManager> v = new Vertex<VertexStateManager>(vertex, new LinkedList<Vertex<VertexStateManager>>()); 
-        //G.AddVertex(v);
+
+        G.AddVertex(vertex);
     }
 
     private void RemoveVertex(VertexStateManager vertex)
     {
         vertex.SelfDestruct();
-    }
-
-    public void AddEdge(GameObject v1, GameObject v2)
-    {
-        EdgeStateManager edge = Instantiate(edgePrefab, v1.transform.position, Quaternion.identity, transform).GetComponent<EdgeStateManager>();
-        edge.Vertices = new GameObject[] {v1,v2};
-        edge.SwitchState(edge.TrueState);
+        G.RemoveVertex(vertex);
     }
 
     private void Drag(VertexStateManager vertex)
@@ -69,5 +66,25 @@ public class DrawTool : MonoBehaviour
         worldMousePosition.z = 0;
 
         return worldMousePosition;
+    }
+
+    public void RunDijkstra()
+    {
+        
+        if(selectedVertices[0] != null && selectedVertices[1] != null)
+        {
+            List<VertexStateManager> path = G.FindShortestPath(selectedVertices[0].GetComponent<VertexStateManager>(), 
+                                                               selectedVertices[1].GetComponent<VertexStateManager>());
+
+            for(int i=0; i<path.Count - 1; i++)
+            {
+                EdgeStateManager edge = path[i].GetEdge(path[i+1]);
+                edge.gameObject.GetComponent<LineRenderer>().endColor = Color.blue;
+            }
+        } else
+        {
+            Debug.Log("no vertices to look for path");
+        }
+        
     }
 }

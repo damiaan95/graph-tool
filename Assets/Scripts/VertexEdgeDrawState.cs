@@ -17,7 +17,7 @@ public class VertexEdgeDrawState : VertexBaseState
 
     public override void EnterState(VertexStateManager vertex)
     {
-        Debug.Log("this vertex now entered its EdgeDrawState");
+        //Debug.Log("this vertex now entered its EdgeDrawState");
     }
 
     public override void UpdateState(VertexStateManager vertex)

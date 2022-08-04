@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Vertex<V,E>
+public class Vertex<V>
 {
-    private Dictionary<Vertex<V,E>, Edge<V,E>> neighbors;
+    private Dictionary<Vertex<V>, Edge<V>> neighbors;
 
-    public Dictionary<Vertex<V,E>, Edge<V,E>> Neighbors
+    public Dictionary<Vertex<V>, Edge<V>> Neighbors
     {
         get { return neighbors; }
     }
@@ -21,10 +21,10 @@ public class Vertex<V,E>
     public Vertex(V data)
     {
         this.data = data;
-        this.neighbors = new Dictionary<Vertex<V,E>, Edge<V, E>>();
+        this.neighbors = new Dictionary<Vertex<V>, Edge<V>>();
     }
 
-    public bool AddNeighbor(Vertex<V, E> v, Edge<V, E> edge)
+    public bool AddNeighbor(Vertex<V> v, Edge<V> edge)
     {
         if(!neighbors.ContainsKey(v))
         {
@@ -34,12 +34,12 @@ public class Vertex<V,E>
         return false;
     }
 
-    public bool RemoveNeighbor(Vertex<V, E> v)
+    public bool RemoveNeighbor(Vertex<V> v)
     {
         return neighbors.Remove(v);
         
     }
-    public bool HasNeighbor(Vertex<V, E> v)
+    public bool HasNeighbor(Vertex<V> v)
     {
         return neighbors.ContainsKey(v);
     } 

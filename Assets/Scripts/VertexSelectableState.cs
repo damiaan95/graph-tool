@@ -3,19 +3,17 @@ using UnityEngine.UI;
 
 public class VertexSelectableState: VertexBaseState
 {
-    public VertexSelectableState()
-    {
-    }
 
     public override void ClickEvent(VertexStateManager vertex)
     {
-        Color color = vertex.gameObject.GetComponent<Image>().color;
-        if (color == Color.white)
+        if (!vertex.Selected)
         {
+            vertex.Selected = true;
             vertex.gameObject.GetComponent<Image>().color = Color.red;
             vertex.CurrentColor = Color.red;
-        } else if(color == Color.red)
+        } else
         {
+            vertex.Selected = false;
             vertex.gameObject.GetComponent<Image>().color = Color.white;
             vertex.CurrentColor = Color.white;
         }

@@ -1,28 +1,21 @@
-﻿public class Edge<V, E>
+﻿public class Edge<V>
 {
-    private int weight;
+    private int weight = 1;
     public int Weight
     {
         get { return weight; }
         set { weight = value; }
     }
 
-    private E data;
-    public E Data
-    {
-        get { return data; }
-    }
+    private Vertex<V>[] vertices;
 
-    private Vertex<V, E>[] vertices;
-
-    public Vertex<V, E>[] Vertices
+    public Vertex<V>[] Vertices
     {
         get { return vertices; }
     }
 
-    public Edge(E data, Vertex<V, E> v1, Vertex<V, E> v2)
+    public Edge(Vertex<V> v1, Vertex<V> v2)
     {
-        this.data = data;
-        this.vertices = new Vertex<V, E>[] { v1, v2 };
+        this.vertices = new Vertex<V>[] { v1, v2 };
     }
 }

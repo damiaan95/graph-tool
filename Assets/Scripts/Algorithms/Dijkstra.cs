@@ -2,30 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dijkstra<V,E>
+public class Dijkstra<V>
 {
-    public static List<Edge<V, E>> Run(Graph<V, E> graph, Vertex<V, E> start, Vertex<V, E> goal)
+    public static List<Vertex<V>> Run(Vertex<V> start, Vertex<V> goal)
     {
-        Dictionary<Vertex<V, E>, List<Edge<V,E>>> paths = new Dictionary<Vertex<V, E>, List<Edge<V,E>>>();
-        Dictionary<Vertex<V, E>, int> distances = new Dictionary<Vertex<V, E>, int>();
+        Dictionary<Vertex<V>, List<Vertex<V>>> paths = new Dictionary<Vertex<V>, List<Vertex<V>>>();
+        Dictionary<Vertex<V>, int> distances = new Dictionary<Vertex<V>, int>();
 
-        paths.Add(start, new List<Edge<V, E>>());
+        paths.Add(start, new List<Vertex<V>>() { start });
         distances.Add(start, 0);
 
-        while (!distances.ContainsKey(goal))
+        while (!paths.ContainsKey(goal))
         {
-            Vertex<V, E> nextVertex = null;
-            Edge<V, E> nextEdge = null;
-            Vertex<V, E> lastVertex = null;
+            Vertex<V> nextVertex = null;
+            Vertex<V> lastVertex = null;
+
             int dist = int.MaxValue;
-            foreach (KeyValuePair<Vertex<V, E>, int> p in distances)
+
+            foreach (KeyValuePair<Vertex<V>, int> p in distances)
             {
-                foreach (KeyValuePair<Vertex<V, E>, Edge<V, E>> kvp in p.Key.Neighbors)
+                foreach (KeyValuePair<Vertex<V>, Edge<V>> kvp in p.Key.Neighbors)//edge is used here to get the weight. If used for nothing else, we can replace neighbors dictionary to store only a number.
                 {
                     if (!distances.ContainsKey(kvp.Key) && p.Value + kvp.Value.Weight <= dist)
                     {
                         nextVertex = kvp.Key;
-                        nextEdge = kvp.Value;
                         lastVertex = p.Key;
                         dist = p.Value + kvp.Value.Weight;
                     }
@@ -34,12 +34,13 @@ public class Dijkstra<V,E>
             if (nextVertex != null)
             {
                 distances[nextVertex] = dist;
-                paths[nextVertex] = new List<Edge<V, E>>(paths[lastVertex]);
-                paths[nextVertex].Add(nextEdge);
+                paths[nextVertex] = new List<Vertex<V>>(paths[lastVertex]);
+                paths[nextVertex].Add(nextVertex);
             }
             else
             {
-                return new List<Edge<V, E>>(); // in this case, the goal cannot be reached.
+                Debug.Log("the next vertex is null");
+                return new List<Vertex<V>>(); // in this case, the goal cannot be reached.
             }
         }
         return paths[goal];

@@ -10,6 +10,9 @@ public class EdgeTrueState : EdgeBaseState
         edge.SetColliderPoints();
         edge.GetComponentInParent<VertexStateManager>()
             .ResetEmptyEdge();
+        edge.Vertices[0].AddEdge(edge.Vertices[1], edge);
+        edge.Vertices[1].AddEdge(edge.Vertices[0], edge);
+        DrawTool.G.AddEdge(edge.Vertices[0], edge.Vertices[1]);
     }
 
     public override void UpdateState(EdgeStateManager edge)
@@ -23,10 +26,5 @@ public class EdgeTrueState : EdgeBaseState
             edge.SetPositions(new Vector3[] { edge.Vertices[0].transform.position, edge.Vertices[1].transform.position });
             edge.SetColliderPoints();
         }
-
-        /*if(Input.GetMouseButtonDown(1))
-        {
-            edge.SelfDestruct();
-        }*/
     }
 }

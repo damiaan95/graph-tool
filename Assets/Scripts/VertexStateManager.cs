@@ -6,13 +6,24 @@ using UnityEngine.EventSystems;
 
 public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHandler
 {
+    internal Vertex<VertexStateManager> v;
+
     VertexBaseState currentState;
     public VertexNormalState NormalState = new VertexNormalState();
     public VertexEdgeDrawState EdgeDrawState = new VertexEdgeDrawState();
     public VertexConnectingState ConnectingState = new VertexConnectingState();
     public VertexSelectableState SelectableState = new VertexSelectableState();
 
+    [SerializeField] private bool selected;
+    public bool Selected
+    {
+        get { return selected; }
+        set { selected = value; }
+    }
+
     [SerializeField] GameObject edgePrefab;
+    private Dictionary<VertexStateManager, EdgeStateManager> trueEdges;
+
     public Color CurrentColor;
     public EdgeStateManager EmptyEdge;
     private LineRenderer lr;
@@ -33,6 +44,8 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
             currentState = NormalState;
         }
 
+        trueEdges = new Dictionary<VertexStateManager, EdgeStateManager>();
+
         EmptyEdge = Instantiate(edgePrefab,
                                 transform.position,
                                 Quaternion.identity, transform)
@@ -43,15 +56,8 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
         lr.positionCount = 2;
         lr.SetPosition(0, this.transform.position);
         lr.SetPosition(1, this.transform.position);
-        EmptyEdge.Vertices[0] = gameObject;
+        EmptyEdge.Vertices[0] = this;
         currentState.EnterState(this);
-
-        Debug.Log(currentState.GetType());
-    }
-
-    private void RemoveEdge(EdgeStateManager edge)
-    {
-        Destroy(edge.gameObject);
     }
 
     // Update is called once per frame
@@ -85,13 +91,22 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
         return lr;
     }
 
+    public EdgeStateManager GetEdge(VertexStateManager vertex)
+    {
+        return trueEdges[vertex];//need exception handling here.
+    }
+    public void AddEdge(VertexStateManager vertex, EdgeStateManager edge)
+    {
+        trueEdges.Add(vertex, edge);
+    }
+
     public void ResetEmptyEdge()
     {
         EmptyEdge = Instantiate(edgePrefab, transform.position, Quaternion.identity, transform).GetComponent<EdgeStateManager>();
         lr = EmptyEdge.GetComponent<LineRenderer>();
         lr.SetPosition(0, this.transform.position);
         lr.SetPosition(1, this.transform.position);
-        EmptyEdge.Vertices[0] = this.gameObject;
+        EmptyEdge.Vertices[0] = this;
     }
 
     public Action<VertexStateManager> OnDragEvent;

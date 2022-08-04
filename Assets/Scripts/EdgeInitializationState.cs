@@ -13,10 +13,6 @@ public class EdgeInitializationState : EdgeBaseState
     {
         if (!Input.GetKey(KeyCode.LeftShift))
         {
-            /*if (edge.Vertices[1] != null)
-            {
-                edge.SwitchState(edge.TrueState);
-            }*/
             edge.Vertices[1] = null;
             edge.SwitchState(edge.NormalState);
         } else if(!Input.GetMouseButton(0) && edge.Vertices[1] != null)
