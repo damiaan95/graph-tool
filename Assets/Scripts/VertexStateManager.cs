@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHandler
+public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHandler, IBeginDragHandler, IEndDragHandler
 {
     internal Vertex<VertexStateManager> v;
 
@@ -15,6 +15,7 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
     public VertexSelectableState SelectableState = new VertexSelectableState();
 
     [SerializeField] private bool selected;
+    [SerializeField] internal GameObject GhostVertexPrefab;
     public bool Selected
     {
         get { return selected; }
@@ -27,6 +28,7 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
     public Color CurrentColor;
     public EdgeStateManager EmptyEdge;
     private LineRenderer lr;
+    private GhostVertex ghostVertex;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +60,27 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
         lr.SetPosition(1, this.transform.position);
         EmptyEdge.Vertices[0] = this;
         currentState.EnterState(this);
+    }
+
+    internal void DestroyGhost()
+    {
+        Destroy(ghostVertex.gameObject);
+    }
+
+    internal void CreateGhost(Vector3 pos)
+    {
+        ghostVertex = Instantiate(GhostVertexPrefab, pos, Quaternion.identity, this.transform.parent).GetComponent<GhostVertex>();
+        ghostVertex.Vertex = this;
+    }
+
+    internal GhostVertex GetGhost()
+    {
+        return this.ghostVertex;
+    }
+
+    internal void BeginDrag(Vector3 vector3)
+    {
+        currentState.BeginDragEvent(this, vector3);
     }
 
     // Update is called once per frame
@@ -113,6 +136,19 @@ public class VertexStateManager : MonoBehaviour, IDragHandler, IPointerClickHand
     public void OnDrag(PointerEventData eventData)
     {
         OnDragEvent?.Invoke(this);
+    }
+
+    public Action<VertexStateManager> OnBeginDragEvent;
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        OnBeginDragEvent?.Invoke(this);
+    }
+
+    //public Action<VertexStateManager> OnEndDragEvent;
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        // OnEndDragEvent?.Invoke(this);
+        currentState.EndDragEvent(this, eventData.position);
     }
 
     public Action<VertexStateManager> OnRightClickEvent;

@@ -17,8 +17,14 @@ public class DrawTool : MonoBehaviour
 
     [Header("Edges")]
     [SerializeField] private GameObject edgePrefab;
+   // [SerializeField] private GameObject[] selectedVertices = new GameObject[2];
 
-    [SerializeField] private GameObject[] selectedVertices = new GameObject[2];
+    [Header("Boxes")]
+    [SerializeField] private GameObject startBoxPrefab;
+    [SerializeField] private GameObject goalBoxPrefab;
+
+    private DropScript startBox;
+    private DropScript goalBox;
 
     internal static Graph<VertexStateManager> G;
 
@@ -26,6 +32,9 @@ public class DrawTool : MonoBehaviour
     {
         G = new Graph<VertexStateManager>();
         drawCanvas.OnDrawCanvasLeftClickEvent += AddVertex;
+
+        startBox = startBoxPrefab.GetComponent<DropScript>();
+        goalBox = goalBoxPrefab.GetComponent<DropScript>();
     }
 
     private void AddVertex()
@@ -40,9 +49,16 @@ public class DrawTool : MonoBehaviour
         vertex.OnDragEvent += Drag;
         vertex.OnRightClickEvent += RemoveVertex;
         vertex.OnLeftClickEvent += Select;
+        vertex.OnBeginDragEvent += BeginDrag;
+        //vertex.OnEndDragEvent += EndDrag;
 
         G.AddVertex(vertex);
     }
+
+   /* private void EndDrag(VertexStateManager vertex)
+    {
+        vertex.EndDrag();
+    }*/
 
     private void RemoveVertex(VertexStateManager vertex)
     {
@@ -53,6 +69,11 @@ public class DrawTool : MonoBehaviour
     private void Drag(VertexStateManager vertex)
     {
         vertex.UpdatePosition(GetMousePosition());
+    }
+
+    private void BeginDrag(VertexStateManager vertex)
+    {
+        vertex.BeginDrag(GetMousePosition());
     }
 
     private void Select(VertexStateManager vertex)
@@ -71,10 +92,10 @@ public class DrawTool : MonoBehaviour
     public void RunDijkstra()
     {
         
-        if(selectedVertices[0] != null && selectedVertices[1] != null)
+        if(startBox.HasVertex() && goalBox.HasVertex())
         {
-            List<VertexStateManager> path = G.FindShortestPath(selectedVertices[0].GetComponent<VertexStateManager>(), 
-                                                               selectedVertices[1].GetComponent<VertexStateManager>());
+            List<VertexStateManager> path = G.FindShortestPath(startBox.GhostVertex.Vertex, 
+                                                               goalBox.GhostVertex.Vertex);
 
             for(int i=0; i<path.Count - 1; i++)
             {

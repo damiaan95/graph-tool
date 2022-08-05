@@ -36,4 +36,14 @@ public class VertexNormalState : VertexBaseState
     {
         //throw new NotImplementedException();
     }
+
+    internal override void BeginDragEvent(VertexStateManager vertex, Vector3 pos)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal override void EndDragEvent(VertexStateManager vertex, Vector3 pos)
+    {
+        throw new NotImplementedException();
+    }
 }

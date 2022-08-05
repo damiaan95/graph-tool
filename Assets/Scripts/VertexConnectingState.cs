@@ -23,4 +23,14 @@ public class VertexConnectingState : VertexBaseState
     {
         throw new System.NotImplementedException();
     }
+
+    internal override void BeginDragEvent(VertexStateManager vertex, Vector3 pos)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    internal override void EndDragEvent(VertexStateManager vertex, Vector3 pos)
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -11,4 +11,8 @@ public abstract class VertexBaseState
     public abstract void DragEvent(VertexStateManager vertex, Vector3 pos);
 
     public abstract void ClickEvent(VertexStateManager vertex);
+
+    internal abstract void BeginDragEvent(VertexStateManager vertex, Vector3 pos);
+
+    internal abstract void EndDragEvent(VertexStateManager vertex, Vector3 pos);
 }

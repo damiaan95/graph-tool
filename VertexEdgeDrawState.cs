@@ -21,7 +21,7 @@ public class VertexEdgeDrawState : VertexBaseState
     }
 
     public override void UpdateState(VertexStateManager vertex)
-    {
+    {   
         if (!Input.GetKey(KeyCode.LeftShift))
         {
             vertex.SwitchState(vertex.NormalState);
@@ -29,11 +29,6 @@ public class VertexEdgeDrawState : VertexBaseState
     }
 
     internal override void BeginDragEvent(VertexStateManager vertex, Vector3 pos)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal override void EndDragEvent(VertexStateManager vertex, Vector3 pos)
     {
         throw new NotImplementedException();
     }

@@ -91,7 +91,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04145b8b20e4a5843b035df5280aa685, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selected: 0
+  GhostVertexPrefab: {fileID: 1257015756241460810, guid: 40e55af7a746ce8488c1bf842eeddc7c, type: 3}
   edgePrefab: {fileID: 4084953216839413480, guid: 56eec6a7aa78db846a8e48bc05b3639b, type: 3}
+  CurrentColor: {r: 0, g: 0, b: 0, a: 0}
   EmptyEdge: {fileID: 0}
 --- !u!58 &-4947830518244540175
 CircleCollider2D:
